@@ -1,0 +1,31 @@
+name: Build Among Us Mod DLL
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.0.x' # Use 6.0.x ou 8.0.x conforme o .csproj do mod
+
+      - name: Restaurar dependências
+        run: dotnet restore
+
+      - name: Compilar DLL (Release)
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Disponibilizar o arquivo .dll
+        uses: actions/upload-artifact@v4
+        with:
+          name: MeuMod-Android-DLL
+          path: '**/bin/Release/**/*.dll'
