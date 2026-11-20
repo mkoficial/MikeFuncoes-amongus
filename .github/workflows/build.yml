@@ -1,4 +1,4 @@
-name: Build Among Us Mod DLL
+name: Compilar Mike Funções Mod
 
 on:
   push:
@@ -16,16 +16,19 @@ jobs:
       - name: Configurar .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.0.x' # Use 6.0.x ou 8.0.x conforme o .csproj do mod
+          dotnet-version: |
+            6.0.x
+            8.0.x
 
-      - name: Restaurar dependências
-        run: dotnet restore
+      - name: Restaurar dependências NuGet
+        run: dotnet restore MiraAPI.Example/MiraAPI.Example.csproj
 
-      - name: Compilar DLL (Release)
-        run: dotnet build --configuration Release --no-restore
+      - name: Compilar MiraAPI e Mike Funções Mod
+        run: dotnet build MiraAPI.Example/MiraAPI.Example.csproj --configuration Release --no-restore
 
-      - name: Disponibilizar o arquivo .dll
+      - name: Enviar DLLs para Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: MeuMod-Android-DLL
-          path: '**/bin/Release/**/*.dll'
+          name: MikeFuncoesMod-Android-PC
+          path: |
+            MiraAPI.Example/bin/Release/**/*.dll
