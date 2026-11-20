@@ -1,51 +1,30 @@
-name: CI
+name: Compilar Mike Funções Mod
 
-on: ["workflow_dispatch", "push", "pull_request"]
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
 
-      - uses: actions/cache@v3
+      - name: Configurar .NET SDK
+        uses: actions/setup-dotnet@v4
         with:
-          path: |
-            ~/.nuget/packages
-            ~/.cache/bepinex
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget-
+          dotnet-version: |
+            6.0.x
+            8.0.x
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 8.0.x
+      - name: Compilar e juntar arquivos
+        run: dotnet build MiraAPI.Example/MiraAPI.Example.csproj -c Release -o ./saida_mod
 
-      - name: Run the Cake script
-        uses: cake-build/cake-action@v2
+      - name: Enviar DLLs para Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          verbosity: Diagnostic
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: MiraAPI.dll
-          path: MiraAPI/bin/Release/net6.0/MiraAPI.dll
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: AllOfUs.MiraAPI.nupkg
-          path: MiraAPI/bin/Release/AllOfUs.MiraAPI.*.nupkg
-          
-      - uses: softprops/action-gh-release@v1
-        if: github.ref_type == 'tag'
-        with:
-          draft: true
-          files: MiraAPI/bin/Release/net6.0/MiraAPI.dll
-          
-      - name: Push NuGet package
-        if: github.ref_type == 'tag'
-        run: |
-          dotnet nuget push MiraAPI/bin/Release/AllOfUs.MiraAPI.*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+          name: MikeFuncoesMod-Pronto
+          path: ./saida_mod/*.dll
