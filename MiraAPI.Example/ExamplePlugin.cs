@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
@@ -9,15 +9,15 @@ using Reactor.Networking.Attributes;
 
 namespace MiraAPI.Example;
 
-[BepInAutoPlugin("mira.example", "MiraExampleMod")]
-[BepInProcess("Among Us.exe")]
+[BepInAutoPlugin("mike.funcoesmod", "Mike Funções Mod")]
+// [BepInProcess("Among Us.exe")] <-- REMOVA ESTA LINHA para funcionar no celular!
 [BepInDependency(ReactorPlugin.Id)]
 [BepInDependency(MiraApiPlugin.Id)]
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public partial class ExamplePlugin : BasePlugin, IMiraPlugin
 {
     public Harmony Harmony { get; } = new(Id);
-    public string OptionsTitleText => "Mira API\nExample Mod";
+    public string OptionsTitleText => "Mike Funções Mod";
     public ConfigFile GetConfigFile() => Config;
     public override void Load()
     {
