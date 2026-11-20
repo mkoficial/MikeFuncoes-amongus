@@ -29,12 +29,12 @@ jobs:
         with:
           verbosity: Diagnostic
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: MiraAPI.dll
           path: MiraAPI/bin/Release/net6.0/MiraAPI.dll
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: AllOfUs.MiraAPI.nupkg
           path: MiraAPI/bin/Release/AllOfUs.MiraAPI.*.nupkg
